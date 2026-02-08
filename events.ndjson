@@ -1,0 +1,3 @@
+{"type":"HEALTH_CHANGE","service":"frontend","ts":1670000000000,"payload":{"old_status":"HEALTHY","new_status":"DEGRADED","reason":"High latency"}}
+{"type":"RPC_ERROR","service":"frontend","ts":1670000001000,"payload":{"source_service":"frontend","dest_service":"auth","method":"Login","error_code":"500"}}
+{"type":"METRIC_SPIKE","service":"auth","ts":1670000002000,"payload":{"metric_name":"cpu_usage","value":95.0,"threshold":80.0}}

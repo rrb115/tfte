@@ -1,0 +1,27 @@
+/* Standard Tailwind CSS directives - safe to ignore IDE warnings */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f172a;
+  /* slate-900 */
+  --foreground: #f8fafc;
+  /* slate-50 */
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background-color: #0f172a;
+  /* Slate 900 */
+  color: #e2e8f0;
+  /* Slate 200 */
+}

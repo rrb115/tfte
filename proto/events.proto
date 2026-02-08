@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package tfte;
+
+option go_package = "github.com/rrb115/tfte/proto/gen/tfte;tfte";
+
+// EventType defines the standard set of system events TFTE understands.
+enum EventType {
+  UNKNOWN = 0;
+  HEALTH_CHANGE = 1;       // node/service; UP/DOWN/DEGRADED
+  RPC_CALL = 2;            // source, dest, method, status, latency_ms
+  RPC_ERROR = 3;           // source, dest, method, error_code, trace_id
+  TIMEOUT = 4;             // source, dest, operation, duration_ms
+  METRIC_SPIKE = 5;        // metric name, value, threshold
+  CIRCUIT_BREAKER = 6;     // service, state OPEN/CLOSED/HALF
+  DEPENDENCY_ANNOUNCE = 7; // runtime dependency declaration (A -> B)
+  DEPLOYMENT = 8;          // service, version, start_ts, end_ts
+  CUSTOM = 100;            // name + payload
+}
+
+// Event is the fundamental unit of data in TFTE.
+message Event {
+  string id = 1;              // UUID
+  EventType type = 2;
+  string service = 3;         // logical service name or node id
+  string host = 4;            // optional host or instance id
+  int64 ts = 5;               // unix nanos
+  bytes payload = 6;          // structured payload (proto or json) depending on type
+  repeated string trace_ids = 7; // optional tracing identifiers linking requests
+}
+
+// Payload messages for specific event types
+
+message HealthChange {
+    enum Status {
+        HEALTHY = 0;
+        DEGRADED = 1;
+        DOWN = 2;
+    }
+    Status old_status = 1;
+    Status new_status = 2;
+    string reason = 3;
+}
+
+message RpcCall {
+    string source_service = 1;
+    string dest_service = 2;
+    string method = 3;
+    int32 status_code = 4;
+    int64 latency_ms = 5;
+}
+
+message RpcError {
+    string source_service = 1;
+    string dest_service = 2;
+    string method = 3;
+    string error_code = 4;
+    string error_message = 5;
+}
+
+message CircuitBreaker {
+    enum State {
+        CLOSED = 0;
+        OPEN = 1;
+        HALF_OPEN = 2;
+    }
+    string component = 1;
+    State old_state = 2;
+    State new_state = 3;
+}

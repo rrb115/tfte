@@ -1,0 +1,35 @@
+# Binaries
+bin/
+dist/
+*.exe
+*.test
+*.out
+tfte-collector
+tfte-core
+tfte-cli
+tfte-api
+tfte-sim
+
+# Data
+*.db
+*.log
+data/
+.env*
+
+# Go
+vendor/
+*.out
+go.work
+go.work.sum
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store

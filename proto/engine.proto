@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package tfte;
+
+option go_package = "github.com/rrb115/tfte/proto/gen/tfte;tfte";
+
+import "proto/events.proto";
+
+// Evidence supports *why* an edge exists or has a certain score.
+message EdgeEvidence {
+    string source_service = 1;
+    string target_service = 2;
+    double score = 3;
+    
+    // Detailed score components for explainability
+    double base_score = 4;
+    double trace_bonus = 5;
+    double rpc_bonus = 6;
+    double time_proximity_bonus = 7;
+    double amplification_penalty = 8;
+
+    // List of Event IDs that contributed to this edge
+    repeated string contributing_event_ids = 9;
+    repeated string applied_rules = 10;
+}
+
+// GraphSnapshot represents the state of the topology at a specific point in time.
+message GraphSnapshot {
+    int64 timestamp = 1;
+    repeated Node nodes = 2;
+    repeated Edge edges = 3;
+}
+
+message Node {
+    string id = 1;
+    string service_name = 2;
+    int32 health_status = 3; // 0=OK, 1=DEGRADED, 2=DOWN
+    double amplification_score = 4;
+    int32 downstream_failures = 5;
+}
+
+message Edge {
+    string source = 1;
+    string target = 2;
+    double causal_confidence = 3; // 0.0 to 1.0
+    bool is_active = 4;
+}

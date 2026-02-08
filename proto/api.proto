@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package tfte;
+
+option go_package = "github.com/rrb115/tfte/proto/gen/tfte;tfte";
+
+import "proto/events.proto";
+import "proto/engine.proto";
+
+service TfteService {
+    // Ingestion
+    rpc IngestEvents(IngestEventsRequest) returns (IngestEventsResponse);
+
+    // Queries
+    rpc GetGraphSnapshot(GetGraphRequest) returns (GraphSnapshot);
+    rpc GetEvents(GetEventsRequest) returns (GetEventsResponse);
+    rpc GetEdgeEvidence(GetEdgeEvidenceRequest) returns (EdgeEvidence);
+    rpc GetRootCause(GetRootCauseRequest) returns (GetRootCauseResponse);
+    
+    // Proofs
+    rpc GetProofBundle(GetProofBundleRequest) returns (GetProofBundleResponse);
+}
+
+message IngestEventsRequest {
+    repeated Event events = 1;
+}
+
+message IngestEventsResponse {
+    int32 events_processed = 1;
+    string error = 2;
+}
+
+message GetGraphRequest {
+    int64 timestamp = 1;
+}
+
+message GetEventsRequest {
+    int64 start_ts = 1;
+    int64 end_ts = 2;
+    string service_filter = 3;
+    int32 limit = 4;
+    int32 offset = 5;
+}
+
+message GetEventsResponse {
+    repeated Event events = 1;
+}
+
+message GetEdgeEvidenceRequest {
+    string source_service = 1;
+    string target_service = 2;
+    int64 associated_timestamp = 3;
+}
+
+message GetProofBundleRequest {
+    string root_event_id = 1;
+    int64 timestamp = 3; // The failure timestamp/Snapshot timestamp
+    int64 window_ms = 2;
+}
+
+message GetProofBundleResponse {
+    bytes bundle_tar_gz = 1;
+    string sha256_hash = 2;
+}
+
+message GetRootCauseRequest {
+    int64 timestamp = 1;
+}
+
+message GetRootCauseResponse {
+    repeated Node candidates = 1;
+}
